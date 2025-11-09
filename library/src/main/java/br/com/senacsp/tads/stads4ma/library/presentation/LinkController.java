@@ -1,11 +1,14 @@
 package br.com.senacsp.tads.stads4ma.library.presentation;
 
+import br.com.senacsp.tads.stads4ma.library.application.dto.LinkDTO;
 import br.com.senacsp.tads.stads4ma.library.models.AddLinkToGroupRequest;
 import br.com.senacsp.tads.stads4ma.library.models.LinkRequest;
+import br.com.senacsp.tads.stads4ma.library.service.LinkService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,7 +17,7 @@ import java.util.UUID;
  * - Pode ou não pertencer a um grupo (group_id opcional)
  */
 @RestController
-@RequestMapping("/links")
+@RequestMapping("api/links")
 public class LinkController {
 
     /**
@@ -32,26 +35,26 @@ public class LinkController {
         return ResponseEntity.ok("Lista de links do usuário");
     }
 
-    /**
+    /*
      * @apiNote Cria um novo link (respeitando limite do plano).
      * @param request Contém URL original e (opcionalmente) o grupo.
      * @return 201 Created com o link encurtado.
-     */
+
     @PostMapping
     public ResponseEntity<?> createLink(@RequestBody LinkRequest request) {
         // TODO: valida plano, gera shortCode e salva
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Link criado com sucesso");
-    }
+    }*/
 
     /**
      * @apiNote Atualiza um link existente do usuário autenticado.
      * @param id ID do link a ser atualizado.
      * @param request Campos a atualizar (URL original, ativo, expiração).
      * @return 200 OK com link atualizado.
-     */
+     *//*
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateLink(
+    public ResponseEntity<?> save(
             @PathVariable UUID id,
             @RequestBody LinkRequest request
     ) {
@@ -63,12 +66,12 @@ public class LinkController {
      * @apiNote Deleta um link criado pelo usuário autenticado.
      * @param id ID do link.
      * @return 204 No Content.
-     */
+     *//*
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLink(@PathVariable UUID id) {
         // TODO: verifica propriedade e exclui
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
     /**
      * @apiNote Adiciona um link existente a um grupo.
@@ -94,6 +97,36 @@ public class LinkController {
     public ResponseEntity<?> removeFromGroup(@PathVariable UUID id) {
         // TODO: remove associação de grupo
         return ResponseEntity.ok("Link removido do grupo");
+    }
+    private final LinkService linkService;
+
+    public LinkController(LinkService linkService) {
+        this.linkService = linkService;
+    }
+
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<LinkDTO> create(
+            @PathVariable UUID userId,
+            @RequestBody LinkRequest request
+    ) {
+        LinkDTO link = linkService.createLink(request, userId);
+        return ResponseEntity.ok(link);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<LinkDTO>> listLinksByUser(@PathVariable UUID userId) {
+        return ResponseEntity.ok(linkService.getLinksByUser(userId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LinkDTO> getLink(@PathVariable UUID id) {
+        return ResponseEntity.ok(linkService.getLinkById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        linkService.deleteLink(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

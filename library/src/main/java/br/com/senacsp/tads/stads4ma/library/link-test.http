@@ -1,0 +1,11 @@
+### Criar um Link
+POST http://localhost:8080/api/links
+Content-Type: application/json
+
+{
+  "originalUrl": "https://www.google.com",
+  "isActive": true
+}
+
+### Listar Links
+GET http://localhost:8080/api/links
