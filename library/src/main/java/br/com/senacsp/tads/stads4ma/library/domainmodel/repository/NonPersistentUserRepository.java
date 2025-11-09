@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Component
-public class NonPersistentUserRepository implements UserRepository<User,UUID> {
+public class NonPersistentUserRepository implements UserRepository {
 
 
     private final Set<User> internalData = new HashSet<>();
@@ -26,6 +26,31 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
     @Override
     public long count() {
         return internalData.size();
+    }
+
+    @Override
+    public void deleteById(UUID uuid) {
+
+    }
+
+    @Override
+    public void delete(User entity) {
+
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends UUID> uuids) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends User> entities) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
     }
 
     @Override
@@ -50,7 +75,7 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
         internalData.add(user); // adiciona no "banco"
         return user;
     }
-
+/*
     @Override
     public User update(User user) {
         deleteById(user.getId());
@@ -70,7 +95,7 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
                 .findFirst()
                 .orElse(null);
     }
-
+*/
     @Override
     public List<User> findByNameAndEmail(String name, String email) {
         return internalData.stream()
@@ -85,8 +110,23 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
     }
 
     @Override
+    public <S extends User> List<S> saveAll(Iterable<S> entities) {
+        return List.of();
+    }
+
+    @Override
+    public Optional<User> findById(UUID uuid) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return new ArrayList<>(internalData);
+    }
+
+    @Override
+    public List<User> findAllById(Iterable<UUID> uuids) {
+        return List.of();
     }
 
     @Override
@@ -94,13 +134,103 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
         return internalData.stream().anyMatch(u -> u.getId().equals(id));
     }
 
+    @Override
+    public void flush() {
 
+    }
+
+    @Override
+    public <S extends User> S saveAndFlush(S entity) {
+        return null;
+    }
+
+    @Override
+    public <S extends User> List<S> saveAllAndFlush(Iterable<S> entities) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteAllInBatch(Iterable<User> entities) {
+
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(Iterable<UUID> uuids) {
+
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+
+    }
+
+    @Override
+    public User getOne(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public User getById(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public User getReferenceById(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public <S extends User> Optional<S> findOne(Example<S> example) {
+        return Optional.empty();
+    }
+
+    @Override
+    public <S extends User> List<S> findAll(Example<S> example) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends User> List<S> findAll(Example<S> example, Sort sort) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends User> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public <S extends User> long count(Example<S> example) {
+        return 0;
+    }
+
+    @Override
+    public <S extends User> boolean exists(Example<S> example) {
+        return false;
+    }
+
+    @Override
+    public <S extends User, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+        return null;
+    }
+
+    @Override
+    public List<User> findAll(Sort sort) {
+        return List.of();
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return null;
+    }
+
+/*
     public boolean removeById(UUID id){
         if (this.existsById(id));{
             User u = this.findById(id);
             this.internalData.remove(id);
         }
         return false;
-    }
+    }*/
 
 }

@@ -22,12 +22,12 @@ public class UserController {
     }
 
     // Buscar todos
+    /*
     @GetMapping
     public ResponseEntity<List<User>> fetchAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    // Buscar por ID
     @GetMapping("/{id}")
     public ResponseEntity<User> fetchById(@PathVariable UUID id) {
         User user = userService.findById(id);
@@ -37,14 +37,14 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // Criar
+
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User created = userService.create(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // Atualizar
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User user) {
         User updated = userService.update(id, user);
@@ -62,6 +62,8 @@ public class UserController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
 }
+
+     */
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.findAllDTO();
@@ -75,19 +77,19 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
         UserDTO created = userService.createDTO(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> update(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
         UserDTO updated = userService.updateDTO(id, userDTO);
         return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         boolean deleted = userService.deleteById(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

@@ -27,4 +27,13 @@ public class MovementHistory {
 
     @Column(name = "total_clicks", nullable = false)
     private Integer totalClicks;
+
+    @Column(name = "action", length = 50, nullable = false)
+    private String action; // Ex: CREATED, UPDATED, DELETED
+
+    @Column(name = "description", length = 255)
+    private String description; // Ex: "Usuário atualizou o link encurtado"
+
+    @Column(name = "user_name", length = 100)
+    private String userName; // Quem realizou a ação
 }

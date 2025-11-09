@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface LinkRepository extends JpaRepository<Link, UUID>{
+
     List<Link> findLinksByUser(UUID userId);
 }

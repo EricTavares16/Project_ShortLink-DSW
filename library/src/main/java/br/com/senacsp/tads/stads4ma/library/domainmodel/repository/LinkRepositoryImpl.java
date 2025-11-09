@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class LinkRepositoryImpl implements LinkRepository {
+public class LinkRepositoryImpl  {
 
     private final JPAQueryFactory queryFactory;
 
@@ -22,7 +22,7 @@ public class LinkRepositoryImpl implements LinkRepository {
         this.queryFactory = queryFactory;
     }
 
-    @Override
+
     public List<Link> findLinksByUser(UUID userId) {
         QLink link = QLink.link;
 
@@ -31,20 +31,10 @@ public class LinkRepositoryImpl implements LinkRepository {
                 .where(link.user.id.eq(userId))
                 .fetch();
     }
-
+/*
     @Override
     public void flush() {
 
-    }
-
-    @Override
-    public <S extends Link> S saveAndFlush(S entity) {
-        return null;
-    }
-
-    @Override
-    public <S extends Link> List<S> saveAllAndFlush(Iterable<S> entities) {
-        return List.of();
     }
 
     @Override
@@ -61,72 +51,6 @@ public class LinkRepositoryImpl implements LinkRepository {
     public void deleteAllInBatch() {
 
     }
-
-    @Override
-    public Link getOne(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public Link getById(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public Link getReferenceById(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public <S extends Link> Optional<S> findOne(Example<S> example) {
-        return Optional.empty();
-    }
-
-    @Override
-    public <S extends Link> List<S> findAll(Example<S> example) {
-        return List.of();
-    }
-
-    @Override
-    public <S extends Link> List<S> findAll(Example<S> example, Sort sort) {
-        return List.of();
-    }
-
-    @Override
-    public <S extends Link> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public <S extends Link> long count(Example<S> example) {
-        return 0;
-    }
-
-    @Override
-    public <S extends Link> boolean exists(Example<S> example) {
-        return false;
-    }
-
-    @Override
-    public <S extends Link, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public <S extends Link> S save(S entity) {
-        return null;
-    }
-
-    @Override
-    public <S extends Link> List<S> saveAll(Iterable<S> entities) {
-        return List.of();
-    }
-
-    @Override
-    public Optional<Link> findById(UUID uuid) {
-        return Optional.empty();
-    }
-
     @Override
     public boolean existsById(UUID uuid) {
         return false;
@@ -180,5 +104,5 @@ public class LinkRepositoryImpl implements LinkRepository {
     @Override
     public Page<Link> findAll(Pageable pageable) {
         return null;
-    }
+    }*/
 }

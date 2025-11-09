@@ -32,34 +32,31 @@ public class UserDataLoader implements CommandLineRunner {
         if (userRepository.count() == 0) {
             System.out.println("🔹 Carregando dados iniciais...");
 
-            // ROLE padrão
+
             Plan basicPlan = planRepository.findByType(PlanType.BASIC)
-                    .orElseGet(() -> {
-                        Plan p = Plan.builder()
-                                .type(PlanType.BASIC)
-                                .price(new BigDecimal("0.00"))
-                                .maxLinks(5)
-                                .build();
-                        return planRepository.save(p);
-                    });
+                    .orElseGet(() -> planRepository.saveAndFlush(
+                            Plan.builder()
+                                    .type(PlanType.BASIC)
+                                    .price(new BigDecimal("0.00"))
+                                    .maxLinks(5)
+                                    .build()
+                    ));
 
             Plan premiumPlan = planRepository.findByType(PlanType.PREMIUM)
-                    .orElseGet(() -> {
-                        Plan p = Plan.builder()
-                                .type(PlanType.PREMIUM)
-                                .price(new BigDecimal("19.99"))
-                                .maxLinks(50)
-                                .build();
-                        return planRepository.save(p);
-                    });
+                    .orElseGet(() -> planRepository.saveAndFlush(
+                            Plan.builder()
+                                    .type(PlanType.PREMIUM)
+                                    .price(new BigDecimal("19.99"))
+                                    .maxLinks(50)
+                                    .build()
+                    ));
 
             Role roleUser = roleRepository.findByType(RoleType.USER)
-                    .orElseGet(() -> {
-                        Role r = Role.builder()
-                                .type(RoleType.USER)
-                                .build();
-                        return roleRepository.save(r);
-                    });
+                    .orElseGet(() -> roleRepository.saveAndFlush(
+                            Role.builder()
+                                    .type(RoleType.USER)
+                                    .build()
+                    ));
 
             // USER padrão
             User user = User.builder()

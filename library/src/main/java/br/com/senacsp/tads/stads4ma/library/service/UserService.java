@@ -2,10 +2,11 @@ package br.com.senacsp.tads.stads4ma.library.service;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.UserDTO;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-
+@Transactional
 public interface UserService {
     public List<User> findAll();
 
