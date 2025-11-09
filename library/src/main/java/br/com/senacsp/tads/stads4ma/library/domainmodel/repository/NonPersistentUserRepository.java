@@ -24,6 +24,11 @@ public class NonPersistentUserRepository implements UserRepository<User,UUID> {
 
 
     @Override
+    public long count() {
+        return internalData.size();
+    }
+
+    @Override
     public List<User> findByEmail(String email) {
 
         return internalData.stream()

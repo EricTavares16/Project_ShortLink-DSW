@@ -2,13 +2,13 @@ package br.com.senacsp.tads.stads4ma.library.presentation;
 
 import br.com.senacsp.tads.stads4ma.library.domainmodel.User;
 import br.com.senacsp.tads.stads4ma.library.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,5 +60,5 @@ public class UserController {
         return deleted
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
-    }
+}
 }

@@ -1,18 +1,25 @@
 package br.com.senacsp.tads.stads4ma.library.domainmodel;
-
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import java.util.UUID;
 
 @Entity
-@Table(name = "ROLE")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "role")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
+    private UUID id;
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, unique = true, length = 20)
+    private RoleType type;
 }

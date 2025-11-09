@@ -1,26 +1,33 @@
 package br.com.senacsp.tads.stads4ma.library.domainmodel;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
-@Table(name = "PLAN")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "plan")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Plan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
+    private UUID id;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, unique = true, length = 20)
+    private PlanType type;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-
-    @Column(nullable = false)
+    @Column(name = "max_links", nullable = false)
     private Integer maxLinks;
 }
