@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class    RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
