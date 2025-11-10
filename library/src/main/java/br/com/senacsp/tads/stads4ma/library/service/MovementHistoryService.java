@@ -1,9 +1,8 @@
 package br.com.senacsp.tads.stads4ma.library.service;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.MovementHistoryDTO;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.MovementHistory;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.MovementHistoryId;
-import org.springframework.data.jpa.repository.JpaRepository;
+
 
 import java.util.List;
 import java.util.Optional;
