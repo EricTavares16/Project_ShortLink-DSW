@@ -2,38 +2,48 @@ package br.com.senacsp.tads.stads4ma.library.domainmodel;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "MOVEMENT_HISTORY")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class MovementHistory {
 
     @EmbeddedId
     private MovementHistoryId id;
 
-    @MapsId("linkId") // Mapeia linkId da chave composta
+    // Mapeamento bidirecional da chave composta: usa o linkId do id como FK
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "link_id", nullable = false)
+    @MapsId("linkId")
+    @JoinColumn(name = "link_id")
     private Link link;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "total_clicks", nullable = false)
+    @Column(name = "total_clicks")
     private Integer totalClicks;
 
-    @Column(name = "action", length = 50, nullable = false)
-    private String action; // Ex: CREATED, UPDATED, DELETED
+    @Column(name = "action", length = 50)
+    private String action;
 
-    @Column(name = "description", length = 255)
-    private String description; // Ex: "Usuário atualizou o link encurtado"
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "user_name", length = 100)
-    private String userName; // Quem realizou a ação
+    @Column(name = "user_name")
+    private String userName;
+
+    // Construtor @Builder para o ServiceImpl
+    @Builder
+    public MovementHistory(MovementHistoryId id, Link link, LocalDateTime createdAt, Integer totalClicks, String action, String description, String userName) {
+        this.id = id;
+        this.link = link;
+        this.createdAt = createdAt;
+        this.totalClicks = totalClicks;
+        this.action = action;
+        this.description = description;
+        this.userName = userName;
+    }
 }
