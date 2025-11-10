@@ -1,75 +1,80 @@
 package br.com.senacsp.tads.stads4ma.library.presentation;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.MovementHistoryDTO;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.MovementHistory;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.MovementHistoryId;
 import br.com.senacsp.tads.stads4ma.library.service.MovementHistoryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
-/**
- * Controlador para histórico de movimentações do usuário.
- * - Registra e lista ações CRUD (link criado, atualizado, etc.)
- */
 @RestController
-@RequestMapping("/history")
+@RequestMapping("/api/movement-history")
 public class MovementHistoryController {
 
-    /**
-     * @apiNote Lista o histórico de ações do usuário autenticado.
-     * @param entity (opcional) filtra por tipo (link, group, user).
-     * @return 200 OK com histórico.
-     *//*
+    private final MovementHistoryService movementHistoryService;
+
+    public MovementHistoryController(MovementHistoryService movementHistoryService) {
+        this.movementHistoryService = movementHistoryService;
+    }
+
+    // Buscar todos
     @GetMapping
-    public ResponseEntity<?> listHistorys(
-            @RequestParam(required = false) String entity
-    ) {
-        // TODO: busca histórico do usuário autenticado
-        return ResponseEntity.ok("Histórico de movimentações");
-    }*/
-    private final MovementHistoryService service;
-
-    public MovementHistoryController(MovementHistoryService service) {
-        this.service = service; // <-- Inicialização do campo
+    public ResponseEntity<List<MovementHistoryDTO>> findAll() {
+        return ResponseEntity.ok(movementHistoryService.findAll());
     }
 
-    private MovementHistoryDTO toDTO(MovementHistory h) {
-        return MovementHistoryDTO.builder()
-                .linkId(h.getId().getLinkId())
-                .date(h.getId().getDate())
-                .action(h.getAction())
-                .description(h.getDescription())
-                .userName(h.getUserName())
-                .build();
+    // Buscar por link (Mais usado)
+    @GetMapping("/link/{linkId}")
+    public ResponseEntity<List<MovementHistoryDTO>> findByLinkId(@PathVariable UUID linkId) {
+        return ResponseEntity.ok(movementHistoryService.findByLinkId(linkId));
     }
 
-    private MovementHistory toEntity(MovementHistoryDTO dto) {
-        return MovementHistory.builder()
-                .id(new MovementHistoryId(dto.getLinkId(), dto.getDate()))
-                .action(dto.getAction())
-                .description(dto.getDescription())
-                .userName(dto.getUserName())
-                .build();
+    // Buscar por ação
+    @GetMapping("/action/{action}")
+    public ResponseEntity<List<MovementHistoryDTO>> findByAction(@PathVariable String action) {
+        return ResponseEntity.ok(movementHistoryService.findByAction(action));
     }
 
-    @GetMapping
-    public ResponseEntity<List<MovementHistoryDTO>> listHistory(
-            @RequestParam(required = false) String entity
-    ) {
-        List<MovementHistoryDTO> history = service.findAll()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(history);
-    }
-
+    // Criar (Recebe DTO e retorna DTO)
     @PostMapping
-    public ResponseEntity<MovementHistoryDTO> create(@RequestBody MovementHistoryDTO dto) {
-        MovementHistory created = service.save(toEntity(dto));
-        return ResponseEntity.ok(toDTO(created));
+    public ResponseEntity<MovementHistoryDTO> create(@RequestBody MovementHistoryDTO movementHistoryDTO) {
+        MovementHistoryDTO createdDto = movementHistoryService.create(movementHistoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDto);
+    }
+
+    /**
+     * Endpoint para buscar por ID Completo (3 Componentes: linkId, date, sequenceId).
+     */
+    @GetMapping("/{linkId}/{date}/{sequenceId}")
+    public ResponseEntity<MovementHistoryDTO> findById(
+            @PathVariable UUID linkId,
+            @PathVariable LocalDate date,
+            @PathVariable UUID sequenceId) {
+
+        // CORREÇÃO: Passando os 3 argumentos
+        MovementHistoryId id = new MovementHistoryId(linkId, date, sequenceId);
+
+        return movementHistoryService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Endpoint de deleção: Precisa dos 3 componentes da chave.
+     */
+    @DeleteMapping("/{linkId}/{date}/{sequenceId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable UUID linkId,
+            @PathVariable LocalDate date,
+            @PathVariable UUID sequenceId) {
+
+        // CORREÇÃO: Passando os 3 argumentos
+        MovementHistoryId id = new MovementHistoryId(linkId, date, sequenceId);
+        boolean deleted = movementHistoryService.deleteById(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
-
