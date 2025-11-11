@@ -27,8 +27,11 @@ O sistema simula um serviço de encurtamento de links, mas com funcionalidades e
 
 
 Endpoints Principais
+
 Usuários
+
 Criar usuário
+
 
 POST /api/users
 
