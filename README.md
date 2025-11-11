@@ -1,5 +1,3 @@
-# Project_ShortLink-DSW
-
 # ShortLink - Encurtador de Links
 
 Projeto desenvolvido em **Java com Spring Boot** para a disciplina de Desenvolvimento de Sistemas Web.  
@@ -27,7 +25,6 @@ O sistema simula um serviço de encurtamento de links, mas com funcionalidades e
 | **Link** | Encurtamento de URLs originais | É o núcleo do sistema, o que dá propósito à aplicação |
 | **Group** | Agrupar e organizar links | Facilita o gerenciamento e análise de campanhas |
 
- Maven
 
 Endpoints Principais
 Usuários
@@ -42,6 +39,8 @@ Content-Type: application/json
   "email": "joao@email.com",
   "password": "123456"
 }
+
+
 
 Banco de Dados
 Banco em memória: H2
