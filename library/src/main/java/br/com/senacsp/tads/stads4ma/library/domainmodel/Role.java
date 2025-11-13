@@ -19,7 +19,7 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "type", nullable = false, unique = true, length = 20)
-    private RoleType type;
+    private String type;
 }

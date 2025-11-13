@@ -31,7 +31,7 @@ public class    RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByType(RoleType type) {
+    public Optional<Role> findByType(String type) {
         return roleRepository.findByType(type);
     }
 

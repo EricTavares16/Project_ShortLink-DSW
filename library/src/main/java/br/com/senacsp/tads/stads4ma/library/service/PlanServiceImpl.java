@@ -3,7 +3,6 @@ package br.com.senacsp.tads.stads4ma.library.service;
 
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Plan;
 
-import br.com.senacsp.tads.stads4ma.library.domainmodel.PlanType;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.PlanRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,8 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public Optional<Plan> findByType(PlanType type) {
+    public Optional<Plan> findByType(String type) {
+
         return planRepository.findByType(type);
     }
 

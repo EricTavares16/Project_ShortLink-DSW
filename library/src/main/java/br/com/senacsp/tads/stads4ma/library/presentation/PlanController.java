@@ -14,7 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/plans")
+@RequestMapping("/api/v1/plans")
 @RequiredArgsConstructor
 public class PlanController {
 
@@ -55,7 +55,7 @@ public class PlanController {
     }
 
     @GetMapping("/type/{type}")
-    public ResponseEntity<PlanDTO> findByType(@PathVariable PlanType type) {
+    public ResponseEntity<PlanDTO> findByType(@PathVariable String type) {
         return planService.findByType(type)
                 .map(plan -> ResponseEntity.ok(toDTO(plan)))
                 .orElse(ResponseEntity.notFound().build());

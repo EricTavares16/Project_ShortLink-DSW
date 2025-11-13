@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface RoleService {
     List<Role> findAll();
     Optional<Role> findById(UUID id);
-    Optional<Role> findByType(RoleType type);
+    Optional<Role> findByType(String type); // ← muda aqui
     Role create(Role role);
     Role update(UUID id, Role updatedRole);
     boolean deleteById(UUID id);

@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface PlanService {
     List<Plan> findAll();
     Optional<Plan> findById(UUID id);
-    Optional<Plan> findByType(PlanType type);
+    Optional<Plan> findByType(String type);
     Plan create(Plan plan);
     Plan update(UUID id, Plan updatedPlan);
     boolean deleteById(UUID id);
