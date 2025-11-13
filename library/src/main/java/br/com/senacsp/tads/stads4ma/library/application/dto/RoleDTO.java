@@ -1,6 +1,5 @@
 package br.com.senacsp.tads.stads4ma.library.application.dto;
 
-import br.com.senacsp.tads.stads4ma.library.domainmodel.RoleType;
 import lombok.*;
 
 import java.util.UUID;

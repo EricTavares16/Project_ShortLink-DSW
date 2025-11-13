@@ -2,7 +2,6 @@ package br.com.senacsp.tads.stads4ma.library.service;
 
 
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Role;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.RoleType;
 
 
 import java.util.List;

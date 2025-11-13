@@ -3,7 +3,6 @@ package br.com.senacsp.tads.stads4ma.library.presentation;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.PlanDTO;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Plan;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.PlanType;
 import br.com.senacsp.tads.stads4ma.library.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

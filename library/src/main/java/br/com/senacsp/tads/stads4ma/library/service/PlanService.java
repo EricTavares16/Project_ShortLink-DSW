@@ -1,6 +1,5 @@
 package br.com.senacsp.tads.stads4ma.library.service;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Plan;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.PlanType;
 
 
 import java.util.List;

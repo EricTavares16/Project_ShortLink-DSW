@@ -19,6 +19,9 @@ public class FullDataLoader implements CommandLineRunner {
     private final MovementHistoryRepository movementHistoryRepository;
     private final RoleRepository roleRepository;
     private final PlanRepository planRepository;
+    private final ProfileRepository profileRepository;
+    private final ClickRepository clickRepository;
+
 
     public FullDataLoader(
             UserRepository userRepository,
@@ -27,7 +30,9 @@ public class FullDataLoader implements CommandLineRunner {
             LinkRepository linkRepository,
             MovementHistoryRepository movementHistoryRepository,
             RoleRepository roleRepository,
-            PlanRepository planRepository
+            PlanRepository planRepository,
+            ProfileRepository profileRepository,
+            ClickRepository clickRepository
     ) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
@@ -36,6 +41,8 @@ public class FullDataLoader implements CommandLineRunner {
         this.movementHistoryRepository = movementHistoryRepository;
         this.roleRepository = roleRepository;
         this.planRepository = planRepository;
+        this.profileRepository = profileRepository;
+        this.clickRepository = clickRepository;
     }
 
     @Override
@@ -106,6 +113,33 @@ public class FullDataLoader implements CommandLineRunner {
                         .role(userRole.getType())
                         .build()
         );
+        // Criar Profile para user1
+        Profile profile1 = Profile.builder()
+                .user(user1)
+                .fullName("Administrador do Sistema")
+                .language("pt-BR")
+                .avatarUrl("https://example.com/avatarAdmin.png")
+                .country("Brasil")
+                .themePreference("dark")
+                .email(user1.getEmail())
+                .phone("+55 11 99999-1234")
+                .build();
+
+        profileRepository.save(profile1);
+
+        // Criar Profile para user2
+        Profile profile2 = Profile.builder()
+                .user(user2)
+                .fullName("Usuário Convidado")
+                .language("pt-BR")
+                .avatarUrl("https://example.com/avatarUser.png")
+                .country("Brasil")
+                .themePreference("light")
+                .email(user2.getEmail())
+                .phone("+55 11 98888-4321")
+                .build();
+
+        profileRepository.save(profile2);
 
         // Grupo
         Group group = groupRepository.save(
@@ -144,6 +178,43 @@ public class FullDataLoader implements CommandLineRunner {
                         .group(group)
                         .build()
         );
+        // Criar 3 cliques no link existente
+        clickRepository.save(
+                Click.builder()
+                        .link(link)
+                        .date(LocalDate.now())
+                        .clickedAt(LocalDate.now().atTime(10, 15))
+                        .region("São Paulo")
+                        .city("São Paulo")
+                        .device("Desktop")
+                        .referer("https://google.com")
+                        .build()
+        );
+
+        clickRepository.save(
+                Click.builder()
+                        .link(link)
+                        .date(LocalDate.now())
+                        .clickedAt(LocalDate.now().atTime(11, 40))
+                        .region("Rio de Janeiro")
+                        .city("Niterói")
+                        .device("Mobile")
+                        .referer("https://instagram.com")
+                        .build()
+        );
+
+        clickRepository.save(
+                Click.builder()
+                        .link(link)
+                        .date(LocalDate.now())
+                        .clickedAt(LocalDate.now().atTime(12, 55))
+                        .region("Minas Gerais")
+                        .city("Belo Horizonte")
+                        .device("Tablet")
+                        .referer("https://facebook.com")
+                        .build()
+        );
+
 
         // Criar histórico de movimentação
         MovementHistoryId historyId = new MovementHistoryId(

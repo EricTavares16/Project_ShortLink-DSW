@@ -2,9 +2,7 @@ package br.com.senacsp.tads.stads4ma.library.service;
 
 
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Role;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.RoleType;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.RoleRepository;
-import br.com.senacsp.tads.stads4ma.library.service.RoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
