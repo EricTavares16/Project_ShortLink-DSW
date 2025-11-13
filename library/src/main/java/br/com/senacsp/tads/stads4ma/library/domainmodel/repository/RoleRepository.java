@@ -1,7 +1,6 @@
 package br.com.senacsp.tads.stads4ma.library.domainmodel.repository;
 
 import br.com.senacsp.tads.stads4ma.library.domainmodel.Role;
-import br.com.senacsp.tads.stads4ma.library.domainmodel.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

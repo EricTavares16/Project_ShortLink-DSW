@@ -26,7 +26,7 @@ public class Click {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "cliked_id", nullable = false)
+    @Column(name = "clicked_at", nullable = false)
     private LocalDateTime clickedAt;
 
     @Column(name = "region", length = 100)
