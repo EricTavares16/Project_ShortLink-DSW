@@ -49,6 +49,11 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
+    public Optional<Role> findByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
     public Role save(Role role) {
         if (role.getId() == null) {
             role.setId(UUID.randomUUID());

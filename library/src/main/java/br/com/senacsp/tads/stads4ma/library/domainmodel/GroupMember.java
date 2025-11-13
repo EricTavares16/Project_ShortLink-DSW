@@ -6,27 +6,33 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "GROUP_MEMBER")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GroupMember {
 
     @EmbeddedId
     private GroupMemberId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("groupId")
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @ManyToOne // Agora é entidade, não Enum
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role; // agora é só um texto, ex: "ADMIN" ou "USER"
 
-    @Column(name = "added_at")
+    @Column(name = "added_at", nullable = false)
     private LocalDate addedAt;
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

@@ -7,16 +7,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Builder
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -35,26 +32,17 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Link> links;
 
+    @Column(nullable = false, length = 20)
+    private String role; // Exemplo: "ADMIN", "USER"
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
-    private Role role;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "plan_id")
-    private Plan plan;
-
+    @Column(nullable = false, length = 20)
+    private String plan; // Exemplo: "PREMIUM", "BASIC"
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Profile profile;
 
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<GroupMember> groupMemberships;
-
-    public String getEmail() {
-        return email;
-    }
 
     public User(UUID id) {
         this.id = id;
@@ -70,74 +58,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Plan getPlan() {
-        return plan;
-    }
-
-    public void setPlan(Plan plan) {
-        this.plan = plan;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public List<GroupMember> getGroupMemberships() {
-        return groupMemberships;
-    }
-
-    public void setGroupMemberships(List<GroupMember> groupMemberships) {
-        this.groupMemberships = groupMemberships;
     }
 }
