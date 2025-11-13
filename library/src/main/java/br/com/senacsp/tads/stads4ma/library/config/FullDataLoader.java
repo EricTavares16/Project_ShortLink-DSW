@@ -5,6 +5,7 @@ import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -16,29 +17,73 @@ public class FullDataLoader implements CommandLineRunner {
     private final GroupMemberRepository groupMemberRepository;
     private final LinkRepository linkRepository;
     private final MovementHistoryRepository movementHistoryRepository;
+    private final RoleRepository roleRepository;
+    private final PlanRepository planRepository;
 
     public FullDataLoader(
             UserRepository userRepository,
             GroupRepository groupRepository,
             GroupMemberRepository groupMemberRepository,
             LinkRepository linkRepository,
-            MovementHistoryRepository movementHistoryRepository
+            MovementHistoryRepository movementHistoryRepository,
+            RoleRepository roleRepository,
+            PlanRepository planRepository
     ) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.linkRepository = linkRepository;
         this.movementHistoryRepository = movementHistoryRepository;
+        this.roleRepository = roleRepository;
+        this.planRepository = planRepository;
     }
 
     @Override
     public void run(String... args) {
+
+        Role adminRole;
+        Role userRole;
+        Plan basicPlan;
+        Plan premiumPlan;
+
+        System.out.println("🔹 Iniciando FullDataLoader...");
+
+        // 1. CARREGAR/CRIAR ROLES
+        if (roleRepository.count() == 0) {
+            System.out.println("   -> Cadastrando Roles iniciais...");
+            adminRole = roleRepository.save(Role.builder().type("ADMIN").build());
+            userRole = roleRepository.save(Role.builder().type("USER").build());
+            System.out.println("   ✅ Roles cadastradas.");
+        } else {
+            System.out.println("   🔸 Roles já existentes. Recuperando...");
+            adminRole = roleRepository.findByType("ADMIN").orElseThrow();
+            userRole = roleRepository.findByType("USER").orElseThrow();
+        }
+
+        // 2. CARREGAR/CRIAR PLANS
+        if (planRepository.count() == 0) {
+            System.out.println("   -> Cadastrando Plans iniciais...");
+            basicPlan = planRepository.save(
+                    Plan.builder().type("BASIC").price(new BigDecimal("0.00")).maxLinks(100).build()
+            );
+            premiumPlan = planRepository.save(
+                    Plan.builder().type("PREMIUM").price(new BigDecimal("19.90")).maxLinks(5000).build()
+            );
+            System.out.println("   ✅ Plans cadastrados.");
+        } else {
+            System.out.println("   🔸 Plans já existentes. Recuperando...");
+            // Se já existirem, apenas recupera para usar na criação dos Usuários
+            basicPlan = planRepository.findByType("BASIC").orElseThrow();
+            premiumPlan = planRepository.findByType("PREMIUM").orElseThrow();
+        }
+
+        // 3. VERIFICAÇÃO FINAL DE USUÁRIOS
         if (userRepository.count() > 0) {
-            System.out.println("🔸 Dados já existentes, FullDataLoader ignorado.");
+            System.out.println("🔸 Usuários já existentes, FullDataLoader ignorado.");
             return;
         }
 
-        System.out.println("🔹 Carregando dados iniciais...");
+        System.out.println("   -> Cadastrando Usuários e dados de exemplo...");
 
         // Usuário 1 (Admin)
         User user1 = userRepository.save(
@@ -46,8 +91,8 @@ public class FullDataLoader implements CommandLineRunner {
                         .name("Administrador Padrão")
                         .email("admin@example.com")
                         .password("123456")
-                        .plan("BASIC")
-                        .role("ADMIN")
+                        .plan(basicPlan.getType())
+                        .role(adminRole.getType())
                         .build()
         );
 
@@ -57,8 +102,8 @@ public class FullDataLoader implements CommandLineRunner {
                         .name("Convidado Teste")
                         .email("guest@example.com")
                         .password("654321")
-                        .plan("BASIC")
-                        .role("USER")
+                        .plan(basicPlan.getType())
+                        .role(userRole.getType())
                         .build()
         );
 
@@ -75,7 +120,7 @@ public class FullDataLoader implements CommandLineRunner {
                 .id(new GroupMemberId(user1.getId(), group.getId()))
                 .user(user1)
                 .group(group)
-                .role("ADMIN") // agora String
+                .role(adminRole.getType()) // agora String
                 .addedAt(LocalDate.now())
                 .build());
 
@@ -83,7 +128,7 @@ public class FullDataLoader implements CommandLineRunner {
                 .id(new GroupMemberId(user2.getId(), group.getId()))
                 .user(user2)
                 .group(group)
-                .role("USER") // agora String
+                .role(userRole.getType()) // agora String
                 .addedAt(LocalDate.now())
                 .build());
 

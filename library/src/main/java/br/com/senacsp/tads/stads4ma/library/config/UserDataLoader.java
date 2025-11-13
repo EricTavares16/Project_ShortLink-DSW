@@ -33,30 +33,8 @@
                 System.out.println("🔹 Carregando dados iniciais...");
 
 
-                Plan basicPlan = planRepository.findByType(PlanType.BASIC)
-                        .orElseGet(() -> planRepository.saveAndFlush(
-                                Plan.builder()
-                                        .type(PlanType.BASIC)
-                                        .price(new BigDecimal("0.00"))
-                                        .maxLinks(5)
-                                        .build()
-                        ));
 
-                Plan premiumPlan = planRepository.findByType(PlanType.PREMIUM)
-                        .orElseGet(() -> planRepository.saveAndFlush(
-                                Plan.builder()
-                                        .type(PlanType.PREMIUM)
-                                        .price(new BigDecimal("19.99"))
-                                        .maxLinks(50)
-                                        .build()
-                        ));
 
-                Role roleUser = roleRepository.findByType(RoleType.USER)
-                        .orElseGet(() -> roleRepository.saveAndFlush(
-                                Role.builder()
-                                        .type(RoleType.USER)
-                                        .build()
-                        ));
 
                 // USER padrão
                 User user = User.builder()

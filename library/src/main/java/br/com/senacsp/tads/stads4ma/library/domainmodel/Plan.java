@@ -21,9 +21,9 @@ public class Plan {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "type", nullable = false, unique = true, length = 20)
-    private PlanType type;
+    private String type;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

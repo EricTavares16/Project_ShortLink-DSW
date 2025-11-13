@@ -32,7 +32,4 @@ public class GroupMember {
     @Column(name = "added_at", nullable = false)
     private LocalDate addedAt;
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
