@@ -40,7 +40,9 @@ Content-Type: application/json
 {
   "name": "João Silva",
   "email": "joao@email.com",
-  "password": "123456"
+  "password": "123456",  
+  "roleName": "USER",
+  "planName": "BASIC",
 }
 
 
