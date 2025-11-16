@@ -2,6 +2,8 @@ package br.com.senacsp.tads.stads4ma.library.service;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.UserDTO;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.User;
+import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.PlanRepository;
+import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.RoleRepository;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PlanRepository planRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                           PlanRepository planRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.planRepository = planRepository;
     }
 
     @Override
@@ -75,9 +83,10 @@ public class UserServiceImpl implements UserService{
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .roleName(user.getRole() != null ? user.getRole().toString() : null)
-                .planName(user.getPlan() != null ? user.getPlan().toString() : null)
+                .roleName(user.getRole())
+                .planName(user.getPlan())
                 .profileId(user.getProfile() != null ? user.getProfile().getId() : null)
+                .password(user.getPassword())
                 .build();
     }
 
@@ -88,7 +97,10 @@ public class UserServiceImpl implements UserService{
         user.setId(dto.getId());
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword()); //
+        user.setPassword(dto.getPassword());
+
+        user.setRole(dto.getRoleName());
+        user.setPlan(dto.getPlanName());
 
         return user;
     }
