@@ -1,41 +1,85 @@
 package br.com.senacsp.tads.stads4ma.library.presentation;
 
-import br.com.senacsp.tads.stads4ma.library.models.LoginRequest;
-import br.com.senacsp.tads.stads4ma.library.models.RegisterRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import br.com.senacsp.tads.stads4ma.library.security.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import br.com.senacsp.tads.stads4ma.library.security.CustomUserDetailsService;
 
-/**
- * Controlador responsável pela autenticação de usuários.
- * - Registra novos usuários.
- * - Realiza login e retorna token JWT.
- */
+import java.util.Map;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    /**
-     * @apiNote Cria um novo usuário no sistema.
-     * @param request Contém nome, email, senha e plano do usuário.
-     * @return 201 Created com dados do usuário recém-criado.
-     */
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        // TODO: validação do plano e criação do usuário
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Usuário registrado com sucesso!");
+    @Autowired
+    private AuthenticationManager authenticationManager; // configure bean
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String password = body.get("password");
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Credenciais inválidas"));
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        String accessToken = jwtService.generateToken(Map.of(), userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return ResponseEntity.ok(Map.of(
+                "accessToken", accessToken,
+                "refreshToken", refreshToken,
+                "tokenType", "Bearer"
+        ));
     }
 
-    /**
-     * @apiNote Realiza login e retorna token JWT.
-     * @param request Contém email e senha do usuário.
-     * @return 200 OK com token JWT.
-     */
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        // TODO: validação de credenciais e geração de token JWT
-        return ResponseEntity.ok("Login realizado com sucesso! Token: [JWT_TOKEN]");
+
+    @PostMapping("/test-token")
+    public ResponseEntity<String> testToken() {
+        UserDetails userDetails = User.withUsername("usuarioTeste")
+                .password("123")
+                .roles("USER")
+                .build();
+
+        String token = jwtService.generateToken(Map.of(), userDetails);
+
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> body) {
+        String refreshToken = body.get("refreshToken");
+        if (refreshToken == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "refreshToken required"));
+        }
+
+        try {
+            String username = jwtService.extractUsername(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (!jwtService.isTokenValid(refreshToken, userDetails)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Refresh token inválido ou expirado"));
+            }
+            String newAccessToken = jwtService.generateToken(Map.of(), userDetails);
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Refresh token inválido"));
+        }
     }
 }
-
