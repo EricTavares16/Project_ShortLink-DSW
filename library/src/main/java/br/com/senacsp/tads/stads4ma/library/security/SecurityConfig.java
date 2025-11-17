@@ -2,6 +2,7 @@ package br.com.senacsp.tads.stads4ma.library.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -18,12 +19,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users").authenticated()
+
+
+                        // Permite o navegador fazer OPTIONS
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Permite criar usuários sem login
+                        .requestMatchers(HttpMethod.POST, "/api/users", "/api/users/**").permitAll()
+
+                        // Bloqueia apenas GET
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+
+                        // Libera todo o resto
                         .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
