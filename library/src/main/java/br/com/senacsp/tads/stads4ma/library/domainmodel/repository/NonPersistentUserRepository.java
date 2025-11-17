@@ -54,11 +54,10 @@ public class NonPersistentUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findByEmail(String email) {
-
+    public Optional<User> findByEmail(String email) {
         return internalData.stream()
                 .filter(u -> u.getEmail().equalsIgnoreCase(email))
-                .toList();
+                .findFirst();
     }
 
     public User create(User user) {

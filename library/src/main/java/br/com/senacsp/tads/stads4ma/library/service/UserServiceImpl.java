@@ -8,6 +8,7 @@ import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.ProfileReposi
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.RoleRepository;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,16 +24,18 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PlanRepository planRepository;
     private final ProfileRepository profileRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            PlanRepository planRepository,
-                           ProfileRepository profileRepository) {
+                           ProfileRepository profileRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.planRepository = planRepository;
         this.profileRepository = profileRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -131,36 +134,40 @@ public class UserServiceImpl implements UserService {
         // 1) Converte DTO → Entidade
         User user = toEntity(userDTO);
 
-        // 2) Salva o usuário sem profile
+        // 2)  CRIPTOGRAFA A SENHA
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 3) Salva o usuário sem profile
         User savedUser = userRepository.save(user);
 
-        // 3) Cria um Profile automaticamente baseado no usuário criado
+        // 4) Cria um Profile automaticamente baseado no usuário criado
         Profile profile = Profile.builder()
-                .user(savedUser)                // vínculo obrigatório
-                .fullName(savedUser.getName())  // pode ser nulo depois
-                .email(savedUser.getEmail())    // obrigatório no Profile
-                .language("pt-BR")              // valor default
-                .themePreference("light")       // default
+                .user(savedUser)
+                .fullName(savedUser.getName())
+                .email(savedUser.getEmail())
+                .language("pt-BR")
+                .themePreference("light")
                 .build();
 
-        // 4) Salva o Profile
+        // 5) Salva o Profile
         Profile savedProfile = profileRepository.save(profile);
 
-        // 5) Atualiza o usuário com o profile criado
+        // 6) Atualiza o usuário com o profile criado
         savedUser.setProfile(savedProfile);
         savedUser = userRepository.save(savedUser);
 
-        // 6) Retorna DTO final com profileId
+        // 7) Retorna DTO final
         return UserDTO.builder()
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
                 .roleName(savedUser.getRole())
                 .planName(savedUser.getPlan())
-                .password(savedUser.getPassword())
+                .password(savedUser.getPassword()) // já criptografada
                 .profileId(savedProfile.getId())
                 .build();
     }
+
 
     @Override
     public UserDTO updateDTO(UUID id, UserDTO userDTO) {
