@@ -32,7 +32,7 @@ public class SecurityConfig {
                         // Bloqueia apenas GET
                         .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
 
-                        // Libera todo o resto
+                        // Libera o resto
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());
