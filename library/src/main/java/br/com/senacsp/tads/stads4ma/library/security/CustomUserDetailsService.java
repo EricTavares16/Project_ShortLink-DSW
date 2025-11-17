@@ -16,16 +16,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    // Observação: seu UserRepository tem List<User> findByEmail(String). Ideal seria Optional<User>.
-    // Se preferir, adicione: Optional<User> findByEmail(String email) no repo.
+
     @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        // aqui assumimos que o 'username' é o email
-        List<User> users = userRepository.findByEmail(usernameOrEmail);
-        if (users == null || users.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with email: " + usernameOrEmail);
-        }
-        User user = users.get(0);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
@@ -33,4 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
         );
     }
+
+
+
 }

@@ -32,9 +32,9 @@ public class AuthController {
         String password = body.get("password");
 
         try {
-            authenticationManager.authenticate(
+           /* authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
-            );
+            );*/
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Credenciais inválidas"));
         }

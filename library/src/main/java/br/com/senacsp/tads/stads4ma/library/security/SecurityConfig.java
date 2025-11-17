@@ -48,19 +48,12 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults());
 
+        http.addFilterBefore(jwtAuthFilter,
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-
-        UserDetails user = User.withUsername("admin")
-                .password(encoder.encode("123"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -75,7 +68,7 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider prov = new DaoAuthenticationProvider();
-        prov.setUserDetailsService(userDetailsService);
+        prov.setUserDetailsService(this.userDetailsService);
         prov.setPasswordEncoder(passwordEncoder());
         return prov;
     }
