@@ -42,8 +42,29 @@ Content-Type: application/json
   "email": "joao@email.com",
   "password": "123456",  
   "roleName": "USER",
-  "planName": "BASIC",
+  "planName": "BASIC"
 }
+
+----TESTE DO JWT ------
+
+POST http://localhost:8080/api/auth/login
+Body (JSON): 
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+
+Resposta esperada:
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9....",
+  "refreshToken": "eyJhbGc...",
+  "tokenType": "Bearer"
+}
+
+GET http://localhost:8080/api/users
+Headers:
+KEY: Authorization
+VALUE: Bearer seu_accessToken
 
 
 
