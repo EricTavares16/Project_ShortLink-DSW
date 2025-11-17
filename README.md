@@ -48,6 +48,7 @@ Content-Type: application/json
 ----TESTE DO JWT ------
 
 POST http://localhost:8080/api/auth/login
+
 Body (JSON): 
 {
   "email": "joao@email.com",
@@ -62,10 +63,10 @@ Resposta esperada:
 }
 
 GET http://localhost:8080/api/users
+
 Headers:
 KEY: Authorization
 VALUE: Bearer seu_accessToken
-
 
 
 Banco de Dados
