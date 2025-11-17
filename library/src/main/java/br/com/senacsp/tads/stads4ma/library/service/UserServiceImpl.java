@@ -1,8 +1,10 @@
 package br.com.senacsp.tads.stads4ma.library.service;
 
 import br.com.senacsp.tads.stads4ma.library.application.dto.UserDTO;
+import br.com.senacsp.tads.stads4ma.library.domainmodel.Profile;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.User;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.PlanRepository;
+import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.ProfileRepository;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.RoleRepository;
 import br.com.senacsp.tads.stads4ma.library.domainmodel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +17,22 @@ import java.util.stream.Collectors;
 
 @Service
 
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PlanRepository planRepository;
+    private final ProfileRepository profileRepository;
+
 
     public UserServiceImpl(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                           PlanRepository planRepository) {
+                           RoleRepository roleRepository,
+                           PlanRepository planRepository,
+                           ProfileRepository profileRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.planRepository = planRepository;
+        this.profileRepository = profileRepository;
     }
 
     @Override
@@ -109,7 +115,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDTO> findAllDTO() {
         return userRepository.findAll()
                 .stream()
-                .map(this :: toDTO)
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -121,9 +127,39 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO createDTO(UserDTO userDTO) {
+
+        // 1) Converte DTO → Entidade
         User user = toEntity(userDTO);
-        User saved = (User) userRepository.save(user);
-        return toDTO(saved);
+
+        // 2) Salva o usuário sem profile
+        User savedUser = userRepository.save(user);
+
+        // 3) Cria um Profile automaticamente baseado no usuário criado
+        Profile profile = Profile.builder()
+                .user(savedUser)                // vínculo obrigatório
+                .fullName(savedUser.getName())  // pode ser nulo depois
+                .email(savedUser.getEmail())    // obrigatório no Profile
+                .language("pt-BR")              // valor default
+                .themePreference("light")       // default
+                .build();
+
+        // 4) Salva o Profile
+        Profile savedProfile = profileRepository.save(profile);
+
+        // 5) Atualiza o usuário com o profile criado
+        savedUser.setProfile(savedProfile);
+        savedUser = userRepository.save(savedUser);
+
+        // 6) Retorna DTO final com profileId
+        return UserDTO.builder()
+                .id(savedUser.getId())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .roleName(savedUser.getRole())
+                .planName(savedUser.getPlan())
+                .password(savedUser.getPassword())
+                .profileId(savedProfile.getId())
+                .build();
     }
 
     @Override
