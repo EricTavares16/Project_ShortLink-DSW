@@ -1,0 +1,10 @@
+Registar:
+curl -X POST "http://localhost:8080/api/users" -H "Content-Type: application/json" -d "{\"name\":\"Orlando\",\"email\":\"orlando@email.com\",\"password\":\"123456\",\"role\":\"USER\",\"plan\":\"BASIC\"}"
+
+Login:
+curl -X POST "http://localhost:8080/api/auth/login" -H "Content-Type: application/json" -d "{\"email\":\"orlando@email.com\",\"password\":\"123456\"}"
+
+Get Login:
+curl -X GET "http://localhost:8080/api/users" -H "Authorization: Bearer TOKEN"
+
+

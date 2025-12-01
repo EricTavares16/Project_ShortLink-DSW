@@ -41,8 +41,8 @@ Content-Type: application/json
   "name": "João Silva",
   "email": "joao@email.com",
   "password": "123456",  
-  "roleName": "USER",
-  "planName": "BASIC"
+  "role": "USER",
+  "plan": "BASIC"
 }
 
 ----TESTE DO JWT ------

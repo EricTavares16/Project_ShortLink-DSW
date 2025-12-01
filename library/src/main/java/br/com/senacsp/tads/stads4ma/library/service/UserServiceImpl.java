@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .roleName(user.getRole())
-                .planName(user.getPlan())
+                .role(user.getRole())
+                .plan(user.getPlan())
                 .profileId(user.getProfile() != null ? user.getProfile().getId() : null)
                 .password(user.getPassword())
                 .build();
@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
 
-        user.setRole(dto.getRoleName());
-        user.setPlan(dto.getPlanName());
+        user.setRole(dto.getRole());
+        user.setPlan(dto.getPlan());
 
         return user;
     }
@@ -161,8 +161,8 @@ public class UserServiceImpl implements UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
-                .roleName(savedUser.getRole())
-                .planName(savedUser.getPlan())
+                .role(savedUser.getRole())
+                .plan(savedUser.getPlan())
                 .password(savedUser.getPassword()) // já criptografada
                 .profileId(savedProfile.getId())
                 .build();
