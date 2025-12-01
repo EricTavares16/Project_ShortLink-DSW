@@ -31,15 +31,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
-        Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(() -> new EntityNotFoundException("Função não encontrada"));
 
         GroupMemberId id = new GroupMemberId(dto.getUserId(), dto.getGroupId());
         GroupMember member = GroupMember.builder()
                 .id(id)
                 .user(user)
                 .group(group)
-                .role("USER")
                 .addedAt(dto.getAddedAt() != null ? dto.getAddedAt() : LocalDate.now())
                 .build();
 
