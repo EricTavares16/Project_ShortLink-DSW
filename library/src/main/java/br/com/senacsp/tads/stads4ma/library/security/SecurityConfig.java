@@ -6,15 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,34 +22,43 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 
+                        /** Libera Swagger totalmente */
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
-                        // Permite o navegador fazer OPTIONS
+                        /** Permitir OPTIONS para CORS */
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Permite criar usuários sem login
+                        /** Criar usuários sem autenticação */
                         .requestMatchers(HttpMethod.POST, "/api/users", "/api/users/**").permitAll()
 
-                        // Bloqueia apenas GET
+                        /** GET de usuários precisa estar autenticado */
                         .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
 
-                        // Libera o resto
+                        /** Libera todo o resto */
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());
 
+        /** Adiciona filtro JWT */
         http.addFilterBefore(jwtAuthFilter,
-                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+        );
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -72,5 +77,4 @@ public class SecurityConfig {
         prov.setPasswordEncoder(passwordEncoder());
         return prov;
     }
-
 }
