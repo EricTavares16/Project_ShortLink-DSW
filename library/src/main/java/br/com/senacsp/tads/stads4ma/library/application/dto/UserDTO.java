@@ -12,8 +12,8 @@ public class UserDTO {
     private UUID id;
     private String name;
     private String email;
-    private String roleName;  // ex: "ADMIN" ou "USER"
-    private String planName;  // ex: "FREE", "PREMIUM"
+    private String role;  // ex: "ADMIN" ou "USER"
+    private String plan;  // ex: "FREE", "PREMIUM"
     private UUID profileId;   // id do Profile associado (se houver)
     private String password;
 
