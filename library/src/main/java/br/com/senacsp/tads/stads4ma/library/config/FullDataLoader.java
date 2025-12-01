@@ -154,7 +154,6 @@ public class FullDataLoader implements CommandLineRunner {
                 .id(new GroupMemberId(user1.getId(), group.getId()))
                 .user(user1)
                 .group(group)
-                .role(adminRole.getType()) // agora String
                 .addedAt(LocalDate.now())
                 .build());
 
@@ -162,7 +161,6 @@ public class FullDataLoader implements CommandLineRunner {
                 .id(new GroupMemberId(user2.getId(), group.getId()))
                 .user(user2)
                 .group(group)
-                .role(userRole.getType()) // agora String
                 .addedAt(LocalDate.now())
                 .build());
 

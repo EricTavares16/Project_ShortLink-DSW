@@ -26,8 +26,6 @@ public class GroupMember {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(name = "role", nullable = false, length = 20)
-    private String role; // agora é só um texto, ex: "ADMIN" ou "USER"
 
     @Column(name = "added_at", nullable = false)
     private LocalDate addedAt;

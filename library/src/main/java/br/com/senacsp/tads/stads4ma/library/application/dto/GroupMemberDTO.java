@@ -14,7 +14,6 @@ public class GroupMemberDTO {
 
     private UUID userId;
     private UUID groupId;
-    private UUID roleId;
     private LocalDate addedAt;
 
     private String name;
